@@ -1,8 +1,9 @@
-import HeroBanner from "../../../../assets/hero-banner.png"
+import HeroBanner from "../../../../assets/hero-banner.svg"
 import CartIcon from "../../../../assets/home-icons/cart-icon.svg"
 import PackageIcon from "../../../../assets/home-icons/package-icon.svg"
 import TimerIcon from "../../../../assets/home-icons/timer-icon.svg"
-import { HeroContainer, SectionInfo } from "./styles"
+import CoffeeIcon from "../../../../assets/home-icons/coffee-icon.svg"
+import { HeroContainer, ImageHeroBanner, SectionInfo } from "./styles"
 
 export function HeroSection() {
     return (
@@ -27,11 +28,12 @@ export function HeroSection() {
                         <span>Entrega rápida e rastreada</span>
                     </li>
                     <li>
+                        <img src={CoffeeIcon} alt=""/>
                         <span>O café chega fresquinho até você</span>
                     </li>
                 </ul>                
             </SectionInfo>
-            <img src={HeroBanner}/>
+            <ImageHeroBanner src={HeroBanner}/>
         </HeroContainer>
     )
 }
