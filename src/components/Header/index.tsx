@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 
 import { CartWrapper, HeaderContainer, LocationWrapper } from "./styles";
-import CoffeeLogo from "../../assets/coffee_logo.svg"
-import ShoppingCart from "../../assets/shopping-cart.svg"
-import PinLogo from "../../assets/pin.svg"
+import CoffeeLogo from "/assets/coffee_logo.svg"
+import ShoppingCart from "/assets/shopping-cart.svg"
+import PinLogo from "/assets/pin.svg"
 import { CurrentLocation } from "./Location";
 
 export function Header() {

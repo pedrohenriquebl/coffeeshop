@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import HeroBanner from "../../../../assets/hero-banner.png"
+import HeroBanner from "/assets/hero-banner.svg"
 
 export const HeroContainer = styled.section`
     display: flex;
     flex-direction: row;
     gap: 3.5rem;
-    margin-top: 5.5rem;
+    margin: 5.5rem 0;
 
     @media (max-width: 768px) {
         flex-direction: column;

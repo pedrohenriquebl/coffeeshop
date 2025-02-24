@@ -1,8 +1,8 @@
-import HeroBanner from "../../../../assets/hero-banner.svg"
-import CartIcon from "../../../../assets/home-icons/cart-icon.svg"
-import PackageIcon from "../../../../assets/home-icons/package-icon.svg"
-import TimerIcon from "../../../../assets/home-icons/timer-icon.svg"
-import CoffeeIcon from "../../../../assets/home-icons/coffee-icon.svg"
+import HeroBanner from "/assets/hero-banner.svg"
+import CartIcon from "/assets/home-icons/cart-icon.svg"
+import PackageIcon from "/assets/home-icons/package-icon.svg"
+import TimerIcon from "/assets/home-icons/timer-icon.svg"
+import CoffeeIcon from "/assets/home-icons/coffee-icon.svg"
 import { HeroContainer, ImageHeroBanner, SectionInfo } from "./styles"
 
 export function HeroSection() {
