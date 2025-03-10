@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../../../../context/CartContext";
 import { CardContainer, Tag, Title, Description, Actions, ActionQty, CartButton } from "./styles";
 import { ShoppingCart, Plus, Minus } from 'phosphor-react';
@@ -13,9 +13,23 @@ interface CoffeeProps {
 }
 
 export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
-    const { cart, setCart, handleUpdateProductQty } = useContext(CartContext);
+    const [quantity, setQuantity] = useState(1);
+    const { cart, setCart, addToCart } = useContext(CartContext);
 
-    console.log('cart', cart);
+    const increaseQty = () => {
+        setQuantity(quantity + 1);
+    }    
+
+    const decreaseQty = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    }
+
+    const handleAddToCart = () => {
+        addToCart(id, quantity, price, title);
+        setQuantity(1);
+    }
 
     return (
         <>
@@ -37,11 +51,11 @@ export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
                 <Actions>
                     <span>R$ <strong>{price.toFixed(2)}</strong></span>
                     <ActionQty>
-                        <button><Minus size={14} onClick={() => handleUpdateProductQty(id, -1, price, title)}/></button>
-                        <span>1</span>
-                        <button><Plus size={14} onClick={() => handleUpdateProductQty(id, +1, price, title)}/></button>                        
+                        <button><Minus size={14} onClick={decreaseQty}/></button>
+                        <span>{quantity}</span>
+                        <button><Plus size={14} onClick={increaseQty}/></button>                        
                     </ActionQty>     
-                    <CartButton><ShoppingCart size={24}/></CartButton>             
+                    <CartButton onClick={handleAddToCart}><ShoppingCart size={24}/></CartButton>             
                 </Actions>
             </CardContainer>
         </>

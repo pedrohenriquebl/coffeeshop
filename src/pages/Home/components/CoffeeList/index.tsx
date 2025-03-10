@@ -27,7 +27,7 @@ const { cart, getProductTotal } = useContext(CartContext)
                 })}                
             </ListContainer>
             <div>
-                {cart.map((item) => {
+                {cart.map((item: any) => {
                     return (
                         <div key={item.id}>
                             <h1>Title: {item.title}</h1>
