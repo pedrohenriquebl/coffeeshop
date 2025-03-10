@@ -5,8 +5,11 @@ import CoffeeLogo from "/assets/coffee_logo.svg"
 import ShoppingCart from "/assets/shopping-cart.svg"
 import PinLogo from "/assets/pin.svg"
 import { CurrentLocation } from "./Location";
+import { useContext } from "react";
+import { CartContext } from "../../context/CartContext";
 
 export function Header() {
+const { getTotalProductsQty } = useContext(CartContext)
     return (
         <HeaderContainer>
             <NavLink to="/">
@@ -21,6 +24,7 @@ export function Header() {
                     <NavLink to="/checkout">
                         <img src={ShoppingCart} alt="minicart icon"/>
                     </NavLink>
+                    <span>{getTotalProductsQty()}</span>
                 </CartWrapper>
             </section>
         </HeaderContainer>

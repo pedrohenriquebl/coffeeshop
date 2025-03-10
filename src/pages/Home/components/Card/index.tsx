@@ -1,7 +1,10 @@
+import { useContext } from "react";
+import { CartContext } from "../../../../context/CartContext";
 import { CardContainer, Tag, Title, Description, Actions, ActionQty, CartButton } from "./styles";
 import { ShoppingCart, Plus, Minus } from 'phosphor-react';
 
 interface CoffeeProps {
+    id: number
     url: string;
     title: string;
     tag: { type: string } | { type: string }[]
@@ -9,8 +12,11 @@ interface CoffeeProps {
     price: number;
 }
 
+export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
+    const { cart, setCart, handleUpdateProductQty } = useContext(CartContext);
 
-export function Card({ url, title, tag, description, price }: CoffeeProps) {
+    console.log('cart', cart);
+
     return (
         <>
             <CardContainer >
@@ -31,9 +37,9 @@ export function Card({ url, title, tag, description, price }: CoffeeProps) {
                 <Actions>
                     <span>R$ <strong>{price.toFixed(2)}</strong></span>
                     <ActionQty>
-                        <button><Minus size={14} /></button>
+                        <button><Minus size={14} onClick={() => handleUpdateProductQty(id, -1, price, title)}/></button>
                         <span>1</span>
-                        <button><Plus size={14} /></button>                        
+                        <button><Plus size={14} onClick={() => handleUpdateProductQty(id, +1, price, title)}/></button>                        
                     </ActionQty>     
                     <CartButton><ShoppingCart size={24}/></CartButton>             
                 </Actions>
