@@ -14,7 +14,7 @@ interface CoffeeProps {
 
 export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
     const [quantity, setQuantity] = useState(1);
-    const { cart, setCart, addToCart } = useContext(CartContext);
+    const { addToCart } = useContext(CartContext);
 
     const increaseQty = () => {
         setQuantity(quantity + 1);

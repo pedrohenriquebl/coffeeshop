@@ -4,6 +4,22 @@ import { CoffeeDatabase } from "../../../../database"
 import { useContext } from "react"
 import { CartContext } from "../../../../context/CartContext"
 
+interface CoffeeProps {
+    id: number
+    url: string;
+    title: string;
+    tag: { type: string } | { type: string }[]
+    description: string;
+    price: number;
+}
+
+interface CartItems {
+    id: number;
+    qty: number;
+    price: number;
+    title: string;
+}
+
 export function CoffeeList () {
 const { cart, getProductTotal } = useContext(CartContext)
 
@@ -11,7 +27,7 @@ const { cart, getProductTotal } = useContext(CartContext)
         <>
             <h2>Nossos Cafés</h2>
             <ListContainer>            
-                {CoffeeDatabase.map((coffee) => {
+                {CoffeeDatabase.map((coffee: CoffeeProps) => {
                     return (
                         <Card
                             id={coffee.id} 
@@ -27,7 +43,7 @@ const { cart, getProductTotal } = useContext(CartContext)
                 })}                
             </ListContainer>
             <div>
-                {cart.map((item: any) => {
+                {cart.map((item: CartItems) => {
                     return (
                         <div key={item.id}>
                             <h1>Title: {item.title}</h1>

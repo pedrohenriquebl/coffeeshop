@@ -18,7 +18,16 @@ interface CartContextType {
     getTotalProductsQty?: () => number;
 }
 
-export const CartContext = createContext<CartContextType | undefined>(undefined);
+const defaultCartContext: CartContextType = {
+    cart: [],
+    setCart: () => {},
+    addToCart: () => {},
+    getCartTotal: () => 0,
+    getProductTotal: () => 0,
+    getTotalProductsQty: () => 0
+}
+
+export const CartContext = createContext<CartContextType>(defaultCartContext);
 
 export function CartContextProvider({ children }: CartContextProviderProps){
     const [cart, setCart] = useState<{ 
