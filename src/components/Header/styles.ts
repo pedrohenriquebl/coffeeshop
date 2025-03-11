@@ -52,3 +52,16 @@ export const CartWrapper = styled.div`
         height: 25px;
     }
 `
+
+export const CartQty = styled.span`
+    padding: 5px;
+    font-size: 0.75rem;
+    background: ${props => props.theme['yellow-dark']};
+    color: ${props => props.theme['yellow-light']};
+    font-weight: 500;
+    border-radius: 50%;
+    width: 24px;
+    text-align: center;
+    position: relative;
+    top: -2px;
+`

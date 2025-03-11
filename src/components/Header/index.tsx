@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-import { CartWrapper, HeaderContainer, LocationWrapper } from "./styles";
+import { CartQty, CartWrapper, HeaderContainer, LocationWrapper } from "./styles";
 import CoffeeLogo from "/assets/coffee_logo.svg"
 import ShoppingCart from "/assets/shopping-cart.svg"
 import PinLogo from "/assets/pin.svg"
@@ -24,7 +24,7 @@ const { getTotalProductsQty } = useContext(CartContext)
                     <NavLink to="/checkout">
                         <img src={ShoppingCart} alt="minicart icon"/>
                     </NavLink>
-                    <span>{getTotalProductsQty()}</span>
+                    <CartQty>{getTotalProductsQty()}</CartQty>
                 </CartWrapper>
             </section>
         </HeaderContainer>

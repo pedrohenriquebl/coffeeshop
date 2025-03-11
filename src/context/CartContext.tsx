@@ -9,13 +9,16 @@ interface CartContextType {
         id: number, 
         qty: number,
         price: number,
-        title: string, 
+        title: string,
+        url: string, 
     }[];
     setCart: React.Dispatch<React.SetStateAction<any>>;
-    addToCart: (id: number, qty: number, price: number, title: string) => void;
+    addToCart: (id: number, qty: number, price: number, title: string, url: string) => void;
     getCartTotal: () => number;
     getProductTotal: (id: number) => number;
-    getTotalProductsQty?: () => number;
+    getTotalProductsQty: () => number;
+    increaseQty: (id: number) => void;
+    decreaseQty: (id: number) => void;
 }
 
 const defaultCartContext: CartContextType = {
@@ -24,7 +27,9 @@ const defaultCartContext: CartContextType = {
     addToCart: () => {},
     getCartTotal: () => 0,
     getProductTotal: () => 0,
-    getTotalProductsQty: () => 0
+    getTotalProductsQty: () => 0,
+    increaseQty: () => {},
+    decreaseQty: () => {},
 }
 
 export const CartContext = createContext<CartContextType>(defaultCartContext);
@@ -34,7 +39,8 @@ export function CartContextProvider({ children }: CartContextProviderProps){
         id: number, 
         qty: number,
         price: number,
-        title: string,
+        title: string,        
+        url: string,
     }[]>([]);
 
     function getProductTotal(id: number) {
@@ -50,7 +56,23 @@ export function CartContextProvider({ children }: CartContextProviderProps){
         return cart.reduce((total, item) => total + item.qty, 0);
     }
 
-    function addToCart(id: number, qty: number, price: number, title: string) {
+    const increaseQty = (id: number) => {
+        setCart(prevCart => 
+            prevCart.map(item => 
+                item.id === id ? { ...item, qty: item.qty + 1 } : item
+            )
+        )
+    }
+
+    const decreaseQty = (id: number) => {
+        setCart(prevCart => 
+            prevCart.map(item => 
+                item.id === id && item.qty > 1 ? { ...item, qty: item.qty - 1 } : item
+            )
+        )
+    }
+
+    function addToCart(id: number, qty: number, price: number, title: string, url: string) {
         setCart(prevCart => {
             const existingItem = prevCart.find(item => item.id === id);
             if (existingItem) {
@@ -58,7 +80,7 @@ export function CartContextProvider({ children }: CartContextProviderProps){
                     item.id === id ? { ...item, qty: item.qty + qty } : item
                 );
             } else {
-                return [...prevCart, { id, qty, price, title }];
+                return [...prevCart, { id, qty, price, title, url }];
             }
 
             /*const updatedCart = prevCart.map(item => {
@@ -93,7 +115,9 @@ export function CartContextProvider({ children }: CartContextProviderProps){
             addToCart,
             getProductTotal,
             getCartTotal,
-            getTotalProductsQty 
+            getTotalProductsQty,
+            increaseQty,
+            decreaseQty,
         }}>
             {children}
         </CartContext.Provider>

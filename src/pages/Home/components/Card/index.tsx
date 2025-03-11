@@ -14,6 +14,9 @@ interface CoffeeProps {
 
 export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
     const [quantity, setQuantity] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isAdded, setIsAdded] = useState(false);
+
     const { addToCart } = useContext(CartContext);
 
     const increaseQty = () => {
@@ -27,8 +30,16 @@ export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
     }
 
     const handleAddToCart = () => {
-        addToCart(id, quantity, price, title);
+        setIsLoading(true);
+
+        addToCart(id, quantity, price, title, url);
         setQuantity(1);
+
+        setTimeout(() => {
+            setIsLoading(false);
+            setIsAdded(true);
+            setTimeout(() => setIsAdded(false), 1000);
+        }, 1000);
     }
 
     return (
@@ -55,7 +66,13 @@ export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
                         <span>{quantity}</span>
                         <button><Plus size={14} onClick={increaseQty}/></button>                        
                     </ActionQty>     
-                    <CartButton onClick={handleAddToCart}><ShoppingCart size={24}/></CartButton>             
+                    {isLoading ? (
+                        <CartButton disabled>Adicionando...</CartButton>
+                    ) : isAdded ? (
+                        <CartButton disabled>Adicionado!</CartButton>
+                    ): (
+                        <CartButton onClick={handleAddToCart}><ShoppingCart size={24}/></CartButton>  
+                    )}           
                 </Actions>
             </CardContainer>
         </>
