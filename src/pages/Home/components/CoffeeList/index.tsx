@@ -1,5 +1,5 @@
 import { Card } from "../Card"
-import { ListContainer } from "./styles"
+import { ListContainer, Title } from "./styles"
 import { CoffeeDatabase } from "../../../../database"
 
 interface CoffeeProps {
@@ -14,7 +14,7 @@ interface CoffeeProps {
 export function CoffeeList () {
     return (
         <>
-            <h2>Nossos Cafés</h2>
+            <Title>Nossos Cafés</Title>
             <ListContainer>            
                 {CoffeeDatabase.map((coffee: CoffeeProps) => {
                     return (

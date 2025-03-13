@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+export const Title = styled.h2`
+    font-family: 'Baloo 2', sans-serif;
+    text-align: center;
+`;
+
 export const ListContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
