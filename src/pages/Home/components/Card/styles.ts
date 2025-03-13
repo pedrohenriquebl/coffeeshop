@@ -63,6 +63,10 @@ export const Description = styled.span`
     text-align: center;
     margin-bottom: 2rem;
     color: ${props => props.theme['base-label']};
+
+    @media screen and (max-width: 768px) {
+        margin-bottom: 0.875;
+    }
 `;
 
 export const Actions = styled.div`
@@ -89,7 +93,7 @@ export const Actions = styled.div`
 
     @media screen and (max-width: 1024px) {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.875rem;
     }
 `;
 
