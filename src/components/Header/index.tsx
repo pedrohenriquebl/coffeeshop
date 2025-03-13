@@ -21,10 +21,9 @@ const { getTotalProductsQty } = useContext(CartContext)
                     <CurrentLocation />
                 </LocationWrapper>
                 <CartWrapper>
-                    <NavLink to="/checkout">
-                        <img src={ShoppingCart} alt="minicart icon"/>
-                    </NavLink>
-                    <CartQty>{getTotalProductsQty()}</CartQty>
+                    <NavLink to="/checkout" data-qty={getTotalProductsQty()}>
+                        <img src={ShoppingCart} alt="minicart icon"/>                        
+                    </NavLink>                    
                 </CartWrapper>
             </section>
         </HeaderContainer>

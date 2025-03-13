@@ -19,6 +19,7 @@ interface CartContextType {
     getTotalProductsQty: () => number;
     increaseQty: (id: number) => void;
     decreaseQty: (id: number) => void;
+    removeItemFromCart: (id: number) => void;
 }
 
 const defaultCartContext: CartContextType = {
@@ -30,6 +31,7 @@ const defaultCartContext: CartContextType = {
     getTotalProductsQty: () => 0,
     increaseQty: () => {},
     decreaseQty: () => {},
+    removeItemFromCart: () => {},
 }
 
 export const CartContext = createContext<CartContextType>(defaultCartContext);
@@ -55,6 +57,10 @@ export function CartContextProvider({ children }: CartContextProviderProps){
     function getTotalProductsQty() {
         return cart.reduce((total, item) => total + item.qty, 0);
     }
+
+    const removeItemFromCart = (id: number) => {
+        setCart(prevCart => prevCart.filter(item => item.id !== id));
+    };
 
     const increaseQty = (id: number) => {
         setCart(prevCart => 
@@ -118,6 +124,7 @@ export function CartContextProvider({ children }: CartContextProviderProps){
             getTotalProductsQty,
             increaseQty,
             decreaseQty,
+            removeItemFromCart
         }}>
             {children}
         </CartContext.Provider>

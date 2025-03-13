@@ -38,9 +38,31 @@ export const LocationWrapper = styled.div`
 `
 
 export const CartWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 38px;
+    height: 38px;
+
+    a {
+        position: relative;
+        display: inherit;
+        text-decoration: none;
+
+        &::after {
+            content: attr(data-qty);
+            position: relative;
+            padding: 5px;
+            font-size: 0.75rem;
+            background: ${props => props.theme['yellow-dark']};
+            color: ${props => props.theme['yellow-light']};
+            font-weight: 500;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            text-align: center;
+            display: inline-block;
+            top: -50px;
+            left: 20px; 
+        }
+    }
     
     border-radius: 8px;
     padding: 0.5rem;
@@ -54,14 +76,5 @@ export const CartWrapper = styled.div`
 `
 
 export const CartQty = styled.span`
-    padding: 5px;
-    font-size: 0.75rem;
-    background: ${props => props.theme['yellow-dark']};
-    color: ${props => props.theme['yellow-light']};
-    font-weight: 500;
-    border-radius: 50%;
-    width: 24px;
-    text-align: center;
-    position: relative;
-    top: -2px;
+      
 `

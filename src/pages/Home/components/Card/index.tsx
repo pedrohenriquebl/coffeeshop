@@ -61,11 +61,18 @@ export function Card({ id, url, title, tag, description, price }: CoffeeProps) {
                 <Description>{description}</Description>
                 <Actions>
                     <span>R$ <strong>{price.toFixed(2)}</strong></span>
-                    <ActionQty>
-                        <button><Minus size={14} onClick={decreaseQty}/></button>
-                        <span>{quantity}</span>
-                        <button><Plus size={14} onClick={increaseQty}/></button>                        
-                    </ActionQty>     
+                    {isLoading ? (
+                        <span></span>
+                    ): isAdded ? (
+                        <span></span>
+                    ): (
+                        <ActionQty>
+                            <button><Minus size={14} onClick={decreaseQty}/></button>
+                            <span>{quantity}</span>
+                            <button><Plus size={14} onClick={increaseQty}/></button>                        
+                        </ActionQty> 
+                    )}
+
                     {isLoading ? (
                         <CartButton disabled>Adicionando...</CartButton>
                     ) : isAdded ? (
