@@ -9,6 +9,7 @@ export const HeroContainer = styled.section`
 
     @media (max-width: 768px) {
         flex-direction: column;
+        margin: 2.5rem 0;
     }
 `
 
