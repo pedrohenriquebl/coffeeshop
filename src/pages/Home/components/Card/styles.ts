@@ -116,10 +116,6 @@ export const ActionQty = styled.div`
         cursor: pointer;
         background: transparent;
         color: ${props => props.theme['purple-dark']};
-
-        @media screen and (max-width: 768px) { 
-            padding: 0 1rem;
-        }
     }
 `;
 
