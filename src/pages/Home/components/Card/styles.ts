@@ -103,10 +103,19 @@ export const ActionQty = styled.div`
     padding: 0.5rem;
     border-radius: 6px;
 
+    @media screen and (max-width: 768px) {        
+        width: 50%;
+        justify-content: center;
+    }
+
     button {
         cursor: pointer;
         background: transparent;
         color: ${props => props.theme['purple-dark']};
+
+        @media screen and (max-width: 768px) { 
+            padding: 0 1rem;
+        }
     }
 `;
 
