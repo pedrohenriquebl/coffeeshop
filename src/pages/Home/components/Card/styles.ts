@@ -65,7 +65,7 @@ export const Description = styled.span`
     color: ${props => props.theme['base-label']};
 
     @media screen and (max-width: 768px) {
-        margin-bottom: 0.875;
+        margin-bottom: 0.875rem;
     }
 `;
 
