@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
 interface CartContextProviderProps {
     children: ReactNode;
@@ -44,6 +44,20 @@ export function CartContextProvider({ children }: CartContextProviderProps){
         title: string,        
         url: string,
     }[]>([]);
+    
+    useEffect(() => {
+        const storedCart = localStorage.getItem('@cart');
+        if (storedCart) {
+            setCart(JSON.parse(storedCart));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (cart.length > 0) {
+            const stateJSON = JSON.stringify(cart);
+            localStorage.setItem('@cart', stateJSON);
+        }
+    }, [cart]);
 
     function getProductTotal(id: number) {
         const product = cart.find(item => item.id === id);
