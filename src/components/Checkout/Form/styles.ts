@@ -82,6 +82,23 @@ export const GroupForm = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.675rem;
+    position: relative;
+
+    &[data-optional='optional'] {
+        &::after {
+            content: "Opcional";
+            font-size: 0.875rem;
+            font-style: italic;
+            position: absolute;
+            left: 85%;
+            top: 12px;
+            color: ${props => props.theme['base-label']};
+
+            @media screen and (max-width: 768px) {
+                display: none;
+            }
+        }
+    }    
 `;
 
 export const BaseInput = styled.input`
@@ -118,7 +135,7 @@ export const NumberInput = styled(BaseInput)`
 `;
 
 export const ComplementInput = styled(BaseInput)`
-    flex: 0 0 67%;
+    flex: 0 0 67%;    
 `;
 
 export const DistrictInput = styled(BaseInput)`

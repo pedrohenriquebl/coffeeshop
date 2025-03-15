@@ -28,8 +28,8 @@ export function Summary() {
             <CheckoutProductContainer>
                 {cart.map((item: CartItems) => {
                     return (
-                        <>
-                            <CheckoutProductList key={item.id}>
+                        <div key={item.id}>
+                            <CheckoutProductList>
                                 <div>
                                     <img src={`${item.url}`} alt={item.title}/>
                                 </div>
@@ -49,7 +49,7 @@ export function Summary() {
                                 <ProductPrice>R${getProductTotal(item.id).toFixed(2)}</ProductPrice>
                             </CheckoutProductList>
                             <hr></hr>
-                        </>
+                        </div>
                     );
                 })}
             </CheckoutProductContainer>

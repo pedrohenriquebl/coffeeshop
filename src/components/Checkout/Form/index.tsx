@@ -15,8 +15,64 @@ import {
     PaymentSection,
     PaymentOption,
 } from "./styles";
+import { useState } from "react";
 
 export function FormCheckout() {
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    async function getAddress(cep: string) {
+
+        try {
+            setError(null);
+            setLoading(true);
+
+            const cepRegex = /^\d{5}-?\d{3}$/;
+
+            if (!cepRegex.test(cep)) {
+                setError('CEP inválido!');
+                return;
+            }
+
+            if (cep.length < 8) {
+                return;
+            }
+
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await response.json();
+
+            if (data.erro) {
+                setError('CEP não encontrado');
+                setLoading(false);
+                return;
+            }
+
+            if (data.logradouro !== undefined) {
+                document.getElementById('street')?.setAttribute('value', data.logradouro);
+            }
+
+            if (data.bairro !== undefined) {
+                document.getElementById('district')?.setAttribute('value', data.bairro);
+            }
+
+            if (data.localidade !== undefined) {
+                document.getElementById('city')?.setAttribute('value', data.localidade);
+            }
+
+            if (data.uf !== undefined) {
+                document.getElementById('uf')?.setAttribute('value', data.uf);
+            }
+        } catch (err) {
+            setError('Ocorreu um erro ao buscar o CEP.');
+            console.error('Error:',
+                err
+            );
+        } finally {
+            setLoading(false);
+        }
+        
+    }
+
     return (
         <>
             <FormTitle>Complete seu pedido</FormTitle>
@@ -31,12 +87,13 @@ export function FormCheckout() {
                     </Headline>
 
                     <div>
-                        <CepInput type="text" id="cep" placeholder="CEP" />
+                        <CepInput type="text" id="cep" placeholder="CEP" onBlur={(e) => getAddress(e.target.value)}/>
                     </div>
+                    {error && <p style={{ color: 'red' }}>{error}</p>} {/* Exibe o erro se houver */}
                     <div>
                         <BaseInput type="text" id="street" placeholder="Rua"/>                        
                     </div>
-                    <GroupForm>
+                    <GroupForm data-optional={'optional'}>
                         <NumberInput type="text" id="number" placeholder="Número" />
                         <ComplementInput type="text" id="complement" placeholder="Complemento"/>
                     </GroupForm>
