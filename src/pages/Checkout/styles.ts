@@ -17,6 +17,7 @@ export const CheckoutFormContainer = styled.section`
     flex: 0 0 60%;
     padding: 2.5rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: ${props => props.theme['base-card']};
