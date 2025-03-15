@@ -63,22 +63,18 @@ export function FormCheckout() {
 
             if (data.uf !== undefined) {
                 document.getElementById('uf')?.setAttribute('value', data.uf);
-            }
-
-            setTimeout(() => {
-                setLoading(false);
-            }, 2000);
+            }            
         } catch (err) {
             setError('Ocorreu um erro ao buscar o CEP.');
             console.error('Error:',
                 err
             );
+        } finally {
+            setLoading(false);
 
             setTimeout(() => {
                 setLoading(false);
             }, 2000);
-        } finally {
-            setLoading(false);
         }
         
     }
