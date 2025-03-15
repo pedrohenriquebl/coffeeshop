@@ -14,8 +14,10 @@ import {
     UfInput,
     PaymentSection,
     PaymentOption,
+    ClipLoaderContainer,
 } from "./styles";
 import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 
 export function FormCheckout() {
     const [error, setError] = useState<string | null>(null);
@@ -62,11 +64,19 @@ export function FormCheckout() {
             if (data.uf !== undefined) {
                 document.getElementById('uf')?.setAttribute('value', data.uf);
             }
+
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
         } catch (err) {
             setError('Ocorreu um erro ao buscar o CEP.');
             console.error('Error:',
                 err
             );
+
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
         } finally {
             setLoading(false);
         }
@@ -89,7 +99,7 @@ export function FormCheckout() {
                     <div>
                         <CepInput type="text" id="cep" placeholder="CEP" onBlur={(e) => getAddress(e.target.value)}/>
                     </div>
-                    {error && <p style={{ color: 'red' }}>{error}</p>} {/* Exibe o erro se houver */}
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                     <div>
                         <BaseInput type="text" id="street" placeholder="Rua"/>                        
                     </div>
@@ -102,6 +112,12 @@ export function FormCheckout() {
                         <CityInput type="text" id="city" placeholder="Cidade" />                        
                         <UfInput type="text" id="uf" placeholder="UF" />
                     </GroupForm>
+
+                    {loading && (
+                        <ClipLoaderContainer>
+                            <ClipLoader color="#000" size={50} />
+                        </ClipLoaderContainer>
+                    )}
                 </fieldset>
                 <fieldset>
                     <Headline>
