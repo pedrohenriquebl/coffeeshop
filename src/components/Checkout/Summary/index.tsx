@@ -13,6 +13,7 @@ import {
     CheckoutButton
 } from "./styles";
 import { FormContext } from "../../../context/FormCartContext";
+import { useNavigate } from 'react-router-dom';
 
 interface CartItems {
     id: number;
@@ -23,8 +24,13 @@ interface CartItems {
 }
 
 export function Summary() {
-    const { cart, getProductTotal, increaseQty, decreaseQty, removeItemFromCart, getCartTotal, clearCart } = useContext(CartContext);    
+    const { cart, getProductTotal, increaseQty, decreaseQty, removeItemFromCart, getCartTotal, clearCart, finalizePurchase } = useContext(CartContext);
+    const navigate = useNavigate();    
     const { formCheckout } = useContext(FormContext);
+
+    const handleFinalizePurchase = (cartId: string) => {
+        finalizePurchase(cartId, navigate);
+    };
 
     const isAddressSaved = formCheckout && formCheckout[0]?.street && formCheckout[0]?.district && formCheckout[0]?.city && formCheckout[0]?.uf;
 
@@ -80,7 +86,7 @@ export function Summary() {
                         <span>R$ {getCartTotal().toFixed(2)}</span>
                     </li>
                 </ul>
-                <CheckoutButton disabled={!isAddressSaved}>Confimar Pedido</CheckoutButton>
+                <CheckoutButton disabled={!isAddressSaved} onClick={() => handleFinalizePurchase(cart[0].cartId)}>Confimar Pedido</CheckoutButton>
                 <ClearCartBtn onClick={() => clearCart(cart[0].cartId)}>Limpar Carrinho</ClearCartBtn>
                 {
                     !isAddressSaved && <p>Por favor, preencha o endereço de entrega e o método de pagamento</p>

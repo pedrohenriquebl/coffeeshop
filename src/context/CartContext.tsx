@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
+import { NavigateFunction } from 'react-router-dom';
 
 interface CartContextProviderProps {
     children: ReactNode;
@@ -34,7 +35,7 @@ interface CartContextType {
     increaseQty: (id: number) => void;
     decreaseQty: (id: number) => void;
     removeItemFromCart: (id: number) => void;
-    finalizePurchase: (cartId: string) => void;
+    finalizePurchase: (cartId: string, navigate: NavigateFunction) => void;
     clearCart: (cartId: string) => void;
 }
 
@@ -71,6 +72,11 @@ export function CartContextProvider({ children }: CartContextProviderProps){
         const storedCart = localStorage.getItem('@cart');
         if (storedCart) {
             setCart(JSON.parse(storedCart));
+        }
+
+        const completedCart = localStorage.getItem('@completedCart');
+        if (completedCart) {
+            console.log('Completed Cart: ', JSON.parse(completedCart));
         }
     }, []);
 
@@ -182,7 +188,7 @@ export function CartContextProvider({ children }: CartContextProviderProps){
         }        
     };
 
-    const finalizePurchase = (cartId: string) => {
+    const finalizePurchase = (cartId: string, navigate: NavigateFunction) => {
         setCart(prevCart => 
             prevCart.map(cart => 
                 !cart.status ? {
@@ -192,7 +198,9 @@ export function CartContextProvider({ children }: CartContextProviderProps){
             )
         );
 
+        localStorage.setItem('@completedCart', JSON.stringify(cart));
         clearCart(cartId);
+        navigate('/success');
     };
 
     
