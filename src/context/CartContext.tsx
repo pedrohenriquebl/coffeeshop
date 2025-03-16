@@ -62,6 +62,8 @@ export function CartContextProvider({ children }: CartContextProviderProps){
         if (cart.length > 0) {
             const stateJSON = JSON.stringify(cart);
             localStorage.setItem('@cart', stateJSON);
+        } else {
+            localStorage.removeItem('@cart');
         }
     }, [cart]);
 
