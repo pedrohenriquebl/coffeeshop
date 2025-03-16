@@ -1,14 +1,46 @@
 import styled from "styled-components";
 
-export const FormTitle = styled.h2`
+export const FormTitle = styled.h2`    
     font-family: 'Baloo 2', sans-serif;
+
+    svg {
+        display: none;
+    }
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        svg {
+            display: block;
+            cursor: pointer;
+            color: ${props => props.theme['purple-dark']};
+        }
+    }
+    
 `;
 
 export const FormContainer = styled.form`
     display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    flex-direction: column;            
     padding-top: 2.5rem;
+    gap: 2rem;
+
+    @media screen and (max-width: 768px) {
+        overflow: hidden;
+        opacity: 0;
+        height: 0;
+        transition: all 0.5s ease-in-out;
+    
+        &.active {
+            height: auto;
+            overflow: visible;            
+            opacity: 1;
+            transition: all 0.5s ease-in-out; 
+        }
+    }
 
     fieldset {
         display: flex;

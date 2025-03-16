@@ -7,6 +7,7 @@ import { NewCheckoutFormData } from "../../../pages/Checkout";
 import { FormContext } from "../../../context/FormCartContext";
 import { PaymentFields } from "./Payment";
 import { AddressFields } from "./Address";
+import { CaretDown } from "phosphor-react";
 
 export function FormCheckout() {
     const { addToFormCheckout, formCheckout } = useContext(FormContext)
@@ -44,9 +45,16 @@ export function FormCheckout() {
         setLoading(false);
     }
 
+    const handleDropdown = () => {
+        const formContainer = document.querySelector('form');
+        formContainer?.classList.toggle('active');
+    }
+
     return (
         <>
-            <FormTitle>Complete seu pedido</FormTitle>
+            <FormTitle>
+                Complete seu pedido <CaretDown size={16} onClick={handleDropdown}/>
+            </FormTitle>
             <FormContainer onSubmit={handleSubmit(handleCreateOrder)}> 
                 <fieldset>
                     <AddressFields />

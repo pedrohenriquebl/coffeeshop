@@ -21,4 +21,8 @@ export const CheckoutFormContainer = styled.section`
     align-items: center;
     justify-content: center;
     background: ${props => props.theme['base-card']};
+
+    @media screen and (max-width: 768px) {
+        min-width: 100%;
+    }
 `;
