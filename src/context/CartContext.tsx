@@ -189,22 +189,32 @@ export function CartContextProvider({ children }: CartContextProviderProps){
     };
 
     const finalizePurchase = (cartId: string, navigate: NavigateFunction) => {
+        console.log('current cartId: ', cartId);
         setCart(prevCart => 
-            prevCart.map(cart => 
-                !cart.status ? {
-                    ...cart,
-                    status: true
-                } : cart
-            )
+            prevCart.map(cart => {
+                if (cart.cartId === cartId) {
+                    return {
+                        ...cart,
+                        status: true,
+                    };
+                }
+                return cart;
+            })
         );
-
-        localStorage.setItem('@completedCart', JSON.stringify(cart));
+        
+        addPurchaseToHistory();
         clearCart(cartId);
         navigate('/success');
     };
 
-    
+    const addPurchaseToHistory = () => {
+        const completedCart = localStorage.getItem('@completedCart');
+        const updatedCompletedCart = completedCart ? JSON.parse(completedCart) : [];
 
+        updatedCompletedCart.push(...cart);
+        localStorage.setItem('@completedCart', JSON.stringify(updatedCompletedCart));
+    };
+    
     const generateCartId = () => {
         return `cart_${Math.random().toString(36).substr(2, 9)}`;
     }
