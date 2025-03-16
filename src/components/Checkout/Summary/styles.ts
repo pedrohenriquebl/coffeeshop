@@ -128,29 +128,46 @@ export const SubtotalContainer = styled.div`
             padding: 0.5rem 0;
             border-bottom: 1px solid ${props => props.theme['base-button']};
         }
+    }    
+`;
+
+const BaseButton = styled.button`
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+`;
+
+export const CheckoutButton = styled(BaseButton)`    
+    
+    background: ${props => props.theme['yellow']};
+    color: ${props => props.theme['white']};
+    text-transform: uppercase;
+
+    &:hover {
+        background: ${props => props.theme['yellow-dark']};
     }
 
-    button {
-        cursor: pointer;
-        border: none;
-        border-radius: 8px;
-        width: 100%;
-        padding: 0.75rem;
-        text-align: center;
-        font-size: 0.875rem;
-        font-weight: 700;
-        background: ${props => props.theme['yellow']};
+    &:disabled {
+        background: ${props => props.theme['yellow-light']};
+        color: ${props => props.theme['base-text']};
+            
+    }
+    
+`;
+
+export const ClearCartBtn = styled(BaseButton)`
+    background: ${props => props.theme['purple-light']};
+    color: ${props => props.theme['base-text']};
+    text-transform: uppercase;
+
+    &:hover {
         color: ${props => props.theme['white']};
-        text-transform: uppercase;
-
-        &:hover {
-            background: ${props => props.theme['yellow-dark']};
-        }
-
-        &:disabled {
-            background: ${props => props.theme['yellow-light']};
-            color: ${props => props.theme['base-text']};
-            cursor: not-allowed;
-        }
+        background: ${props => props.theme['purple-dark']};
+        opacity: 0.9;
     }
 `;

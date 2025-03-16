@@ -6,26 +6,36 @@ interface CartContextProviderProps {
 
 interface CartContextType {
     cart: { 
-        id: number, 
-        qty: number,
-        price: number,
-        title: string,
-        url: string, 
+        cartId: string,
+        status: boolean,
+        items: {
+            id: number, 
+            qty: number,
+            price: number,
+            title: string,
+            url: string,
+        }[]
     }[];
     setCart: React.Dispatch<React.SetStateAction<{ 
-        id: number, 
-        qty: number,
-        price: number,
-        title: string,
-        url: string, 
+        cartId: string,
+        status: boolean,
+        items: {
+            id: number, 
+            qty: number,
+            price: number,
+            title: string,
+            url: string,
+        }[]
     }[]>>;
-    addToCart: (id: number, qty: number, price: number, title: string, url: string) => void;
+    addToCart: (id: number, qty: number, price: number, title: string, url: string, status?: boolean) => void;
     getCartTotal: () => number;
     getProductTotal: (id: number) => number;
     getTotalProductsQty: () => number;
     increaseQty: (id: number) => void;
     decreaseQty: (id: number) => void;
     removeItemFromCart: (id: number) => void;
+    finalizePurchase: (cartId: string) => void;
+    clearCart: (cartId: string) => void;
 }
 
 const defaultCartContext: CartContextType = {
@@ -38,17 +48,23 @@ const defaultCartContext: CartContextType = {
     increaseQty: () => {},
     decreaseQty: () => {},
     removeItemFromCart: () => {},
+    finalizePurchase: () => {},
+    clearCart: () => {}
 }
 
 export const CartContext = createContext<CartContextType>(defaultCartContext);
 
 export function CartContextProvider({ children }: CartContextProviderProps){
     const [cart, setCart] = useState<{ 
-        id: number, 
-        qty: number,
-        price: number,
-        title: string,        
-        url: string,
+        cartId: string;
+        status: boolean;
+        items: { 
+            id: number;
+            qty: number;
+            price: number;
+            title: string;
+            url: string;
+        }[];
     }[]>([]);
     
     useEffect(() => {
@@ -68,49 +84,121 @@ export function CartContextProvider({ children }: CartContextProviderProps){
     }, [cart]);
 
     function getProductTotal(id: number) {
-        const product = cart.find(item => item.id === id);
-        return product ? product.qty * product.price : 0;
+        for (const cartItem of cart) {
+            const product = cartItem.items.find(item => item.id === id);
+            if (product) {
+                return product.qty * product.price;
+            }
+        }
+
+        return 0;
     }
 
     function getCartTotal() {
-        return cart.reduce((total, item) => total + item.price * item.qty, 0);
+        return cart.reduce((total, cartItem) => total + cartItem.items.reduce((itemTotal, item) => itemTotal + item.price * item.qty, 0), 0);
     }
 
     function getTotalProductsQty() {
-        return cart.reduce((total, item) => total + item.qty, 0);
+        return cart.reduce((total, cartItem) => total + cartItem.items.reduce((itemTotal, item) => itemTotal + item.qty, 0), 0);
     }
 
-    const removeItemFromCart = (id: number) => {
-        setCart(prevCart => prevCart.filter(item => item.id !== id));
+    const removeItemFromCart = (productId: number) => {
+        setCart(prevCart => 
+            prevCart.map(cart => 
+                !cart.status ? {
+                    ...cart,
+                    items: cart.items.filter(item => item.id !== productId)
+                } : cart
+            )
+        );
     };
 
-    const increaseQty = (id: number) => {
+    const increaseQty = (productId: number) => {
         setCart(prevCart => 
-            prevCart.map(item => 
-                item.id === id ? { ...item, qty: item.qty + 1 } : item
+            prevCart.map(cart => 
+                !cart.status ? {
+                    ...cart,
+                    items: cart.items.map(item => 
+                        item.id === productId ? { 
+                            ...item, 
+                            qty: item.qty + 1 
+                        } : item
+                    )
+                } : cart
             )
-        )
-    }
+        );
+    };
 
-    const decreaseQty = (id: number) => {
+    const decreaseQty = (productId: number) => {
         setCart(prevCart => 
-            prevCart.map(item => 
-                item.id === id && item.qty > 1 ? { ...item, qty: item.qty - 1 } : item
+            prevCart.map(cart => 
+                !cart.status ? {
+                    ...cart,
+                    items: cart.items.map(item => 
+                        item.id === productId && item.qty > 1 ? { 
+                            ...item, 
+                            qty: item.qty - 1 
+                        } : item
+                    )
+                } : cart
             )
-        )
-    }
+        );
+    };
+
 
     function addToCart(id: number, qty: number, price: number, title: string, url: string) {
-        setCart(prevCart => {
-            const existingItem = prevCart.find(item => item.id === id);
-            if (existingItem) {
-                return prevCart.map(item =>
-                    item.id === id ? { ...item, qty: item.qty + qty } : item
-                );
-            } else {
-                return [...prevCart, { id, qty, price, title, url }];
-            }
-        });        
+        const existingCart = cart.find(cartOpen => !cartOpen.status); 
+
+        if (existingCart) {
+            setCart(prevCart => 
+                prevCart.map(cartOpen => 
+                    cartOpen.cartId === existingCart.cartId ? 
+                    { 
+                        ...cartOpen, 
+                        items: [...cartOpen.items, { id, qty, price, title, url }] 
+                    } : cartOpen
+                )
+            );
+        } else {
+            const newCartId = generateCartId();
+            setCart(prevCart => [
+                ...prevCart, 
+                    { 
+                        cartId: newCartId, 
+                        status: false, 
+                        items: [{ id, qty, price, title, url }] 
+                    }
+                ]
+            );
+        }     
+    }
+
+    const clearCart = (cartId: string) => {
+        const existingCart = cart.find(cartOpen => cartOpen.cartId === cartId);
+
+        if (existingCart) {
+            setCart([]);
+            localStorage.removeItem('@cart');
+        }        
+    };
+
+    const finalizePurchase = (cartId: string) => {
+        setCart(prevCart => 
+            prevCart.map(cart => 
+                !cart.status ? {
+                    ...cart,
+                    status: true
+                } : cart
+            )
+        );
+
+        clearCart(cartId);
+    };
+
+    
+
+    const generateCartId = () => {
+        return `cart_${Math.random().toString(36).substr(2, 9)}`;
     }
 
     return (
@@ -123,7 +211,9 @@ export function CartContextProvider({ children }: CartContextProviderProps){
             getTotalProductsQty,
             increaseQty,
             decreaseQty,
-            removeItemFromCart
+            removeItemFromCart,
+            finalizePurchase,
+            clearCart            
         }}>
             {children}
         </CartContext.Provider>

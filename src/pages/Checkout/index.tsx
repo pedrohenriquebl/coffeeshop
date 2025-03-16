@@ -25,6 +25,7 @@ export type NewCheckoutFormData = zod.infer<typeof newCheckoutFormSchema>;
 
 export function Checkout() {
     const { cart } = useContext(CartContext);  
+    console.log(cart)
     const checkoutForm = useForm<NewCheckoutFormData>({
         resolver: zodResolver(newCheckoutFormSchema),
         defaultValues: {
@@ -41,7 +42,7 @@ export function Checkout() {
 
     return (
         <CheckoutContainer>
-            {cart.length === 0 ?(<h2>Seu carrinho está vazio</h2>) : (
+            {cart.length === 0 || cart[0]?.items.length === 0 ?(<h2>Seu carrinho está vazio</h2>) : (
                 <>
                     <FormProvider {...checkoutForm}>
                         <CheckoutFormContainer>                        

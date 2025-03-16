@@ -8,7 +8,9 @@ import {
     ProductActions,
     Actions,
     ProductPrice,
-    SubtotalContainer 
+    SubtotalContainer, 
+    ClearCartBtn,
+    CheckoutButton
 } from "./styles";
 import { FormContext } from "../../../context/FormCartContext";
 
@@ -21,7 +23,7 @@ interface CartItems {
 }
 
 export function Summary() {
-    const { cart, getProductTotal, increaseQty, decreaseQty, removeItemFromCart, getCartTotal } = useContext(CartContext);    
+    const { cart, getProductTotal, increaseQty, decreaseQty, removeItemFromCart, getCartTotal, clearCart } = useContext(CartContext);    
     const { formCheckout } = useContext(FormContext);
 
     const isAddressSaved = formCheckout && formCheckout[0]?.street && formCheckout[0]?.district && formCheckout[0]?.city && formCheckout[0]?.uf;
@@ -30,32 +32,38 @@ export function Summary() {
         <CheckoutSummaryContainer>
             <h2>Cafés selecionados</h2>
             <CheckoutProductContainer>
-                {cart.map((item: CartItems) => {
-                    return (
-                        <div key={item.id}>
-                            <CheckoutProductList>
+                {cart.map((cartItem) => (
+                    cartItem.items.map((item: CartItems) => (
+                        <>
+                            <CheckoutProductList key={item.id}>
                                 <div>
-                                    <img src={`${item.url}`} alt={item.title}/>
+                                    <img src={item.url} alt={item.title} />
                                 </div>
                                 <ProductActions>
                                     <h3>{item.title}</h3>
                                     <Actions>
                                         <section>
-                                            <button><Plus size={14} onClick={() => increaseQty(item.id)}/></button>
+                                            <button>
+                                                <Plus size={14} onClick={() => increaseQty(item.id)} />
+                                            </button>
                                             <span>{item.qty}</span>
-                                            <button><Minus size={14} onClick={() => decreaseQty(item.id)}/></button>
+                                            <button>
+                                                <Minus size={14} onClick={() => decreaseQty(item.id)} />
+                                            </button>
                                         </section>
                                         <section>
-                                            <button onClick={() => removeItemFromCart(item.id)}><Trash size={16} />Remover</button>
+                                            <button onClick={() => removeItemFromCart(item.id)}>
+                                                <Trash size={16} /> Remover
+                                            </button>
                                         </section>
                                     </Actions>
                                 </ProductActions>
-                                <ProductPrice>R${getProductTotal(item.id).toFixed(2)}</ProductPrice>
+                                <ProductPrice>R${getProductTotal(item.id).toFixed(2)}</ProductPrice>                            
                             </CheckoutProductList>
-                            <hr></hr>
-                        </div>
-                    );
-                })}
+                            <hr />
+                        </>
+                    ))
+                ))}
             </CheckoutProductContainer>
             <SubtotalContainer>
                 <ul>
@@ -72,7 +80,8 @@ export function Summary() {
                         <span>R$ {getCartTotal().toFixed(2)}</span>
                     </li>
                 </ul>
-                <button disabled={!isAddressSaved}>Confimar Pedido</button>
+                <CheckoutButton disabled={!isAddressSaved}>Confimar Pedido</CheckoutButton>
+                <ClearCartBtn onClick={() => clearCart(cart[0].cartId)}>Limpar Carrinho</ClearCartBtn>
                 {
                     !isAddressSaved && <p>Por favor, preencha o endereço de entrega e o método de pagamento</p>
                 }
