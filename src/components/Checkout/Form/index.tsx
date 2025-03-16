@@ -108,6 +108,17 @@ export function FormCheckout() {
         }        
     }
 
+    function handleCepChange (e: React.ChangeEvent<HTMLInputElement>) {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length <= 5) {
+            value = value.replace(/(\d{5})(\d{0,1})/, "$1-$2");
+        } else {
+            value = value.replace(/(\d{5})(\d{0,3})/, "$1-$2");
+        }
+
+        setValue("cep", value); 
+    }
+
     async function handleCreateOrder(data: NewCheckoutFormData) {    
         setLoading(true);    
 
@@ -138,7 +149,14 @@ export function FormCheckout() {
                     </Headline>
 
                     <div>
-                        <CepInput {...register("cep")} type="text" id="cep" placeholder="CEP" onBlur={(e) => getAddress(e.target.value)}/>
+                        <CepInput 
+                            {...register("cep")} 
+                            type="text" 
+                            id="cep" 
+                            placeholder="CEP" 
+                            onBlur={(e) => getAddress(e.target.value)}
+                            onChange={(e) => handleCepChange(e)}
+                        />
                     </div>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     <div>
