@@ -47,15 +47,15 @@ export function FormCheckout() {
     return (
         <>
             <FormTitle>Complete seu pedido</FormTitle>
-            <FormContainer onSubmit={handleSubmit(handleCreateOrder)}>  
+            <FormContainer onSubmit={handleSubmit(handleCreateOrder)}> 
+                <fieldset>
+                    <AddressFields />
+                </fieldset>
                 {loading && (
                     <ClipLoaderContainer>
                         <ClipLoader color="#000" size={50} />
                     </ClipLoaderContainer>
                 )}
-                <fieldset>
-                    <AddressFields />
-                </fieldset>
                 <fieldset>
                     <PaymentFields />
                 </fieldset>
