@@ -16,15 +16,42 @@ import {
     PaymentOption,
     ClipLoaderContainer,
 } from "./styles";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import { useFormContext } from "react-hook-form";
+import { NewCheckoutFormData } from "../../../pages/Checkout";
+import { FormContext } from "../../../context/FormCartContext";
 
 export function FormCheckout() {
+    const { addToFormCheckout, formCheckout } = useContext(FormContext)
+
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [initialData, setInitialData] = useState<NewCheckoutFormData | null>(null);
+    const { register, handleSubmit, setValue, watch } = useFormContext<NewCheckoutFormData>();
+
+    const watchedData = watch();    
+
+    useEffect(() => {
+        if (formCheckout && formCheckout.length > 0) {
+            const checkoutFormData = formCheckout[0];
+
+            setValue('cep', checkoutFormData.cep || "");
+            setValue('street', checkoutFormData.street || "");
+            setValue('number', checkoutFormData.number || "");
+            setValue('complement', checkoutFormData.complement || "");
+            setValue('district', checkoutFormData.district || "");
+            setValue('city', checkoutFormData.city || "");
+            setValue('uf', checkoutFormData.uf || "");
+            setValue('payment', checkoutFormData.payment || "");
+
+            setInitialData(checkoutFormData);
+        }
+    }, [formCheckout, setValue]);
+
+    const isDataChanged = initialData && JSON.stringify(watchedData) !== JSON.stringify(initialData);
 
     async function getAddress(cep: string) {
-
         try {
             setError(null);
             setLoading(true);
@@ -32,11 +59,13 @@ export function FormCheckout() {
             const cepRegex = /^\d{5}-?\d{3}$/;
 
             if (!cepRegex.test(cep)) {
+                resetFields();
                 setError('CEP inválido!');
                 return;
             }
 
             if (cep.length < 8) {
+                resetFields();
                 return;
             }
 
@@ -46,23 +75,24 @@ export function FormCheckout() {
             if (data.erro) {
                 setError('CEP não encontrado');
                 setLoading(false);
+                resetFields();
                 return;
             }
 
             if (data.logradouro !== undefined) {
-                document.getElementById('street')?.setAttribute('value', data.logradouro);
+                setValue('street', data.logradouro || "");
             }
 
             if (data.bairro !== undefined) {
-                document.getElementById('district')?.setAttribute('value', data.bairro);
+                setValue('district', data.bairro || "");
             }
 
             if (data.localidade !== undefined) {
-                document.getElementById('city')?.setAttribute('value', data.localidade);
+                setValue('city', data.localidade || "");
             }
 
             if (data.uf !== undefined) {
-                document.getElementById('uf')?.setAttribute('value', data.uf);
+                setValue('uf', data.uf || "");
             }            
         } catch (err) {
             setError('Ocorreu um erro ao buscar o CEP.');
@@ -75,14 +105,29 @@ export function FormCheckout() {
             setTimeout(() => {
                 setLoading(false);
             }, 2000);
-        }
-        
+        }        
+    }
+
+    async function handleCreateOrder(data: NewCheckoutFormData) {    
+        setLoading(true);    
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        addToFormCheckout(data);
+        setLoading(false);
+    }
+
+    function resetFields() {
+        setValue('street', '');
+        setValue('district', '');
+        setValue('city', '');
+        setValue('uf', '');
     }
 
     return (
         <>
             <FormTitle>Complete seu pedido</FormTitle>
-            <FormContainer>  
+            <FormContainer onSubmit={handleSubmit(handleCreateOrder)}>  
                 <fieldset>
                     <Headline>
                         <Title>
@@ -93,20 +138,20 @@ export function FormCheckout() {
                     </Headline>
 
                     <div>
-                        <CepInput type="text" id="cep" placeholder="CEP" onBlur={(e) => getAddress(e.target.value)}/>
+                        <CepInput {...register("cep")} type="text" id="cep" placeholder="CEP" onBlur={(e) => getAddress(e.target.value)}/>
                     </div>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     <div>
-                        <BaseInput type="text" id="street" placeholder="Rua"/>                        
+                        <BaseInput {...register("street")} type="text" id="street" placeholder="Rua"/>                        
                     </div>
                     <GroupForm data-optional={'optional'}>
-                        <NumberInput type="text" id="number" placeholder="Número" />
-                        <ComplementInput type="text" id="complement" placeholder="Complemento"/>
+                        <NumberInput {...register("number")} type="text" id="number" placeholder="Número" />
+                        <ComplementInput {...register("complement")}type="text" id="complement" placeholder="Complemento"/>
                     </GroupForm>
                     <GroupForm>
-                        <DistrictInput type="text" id="district" placeholder="Bairro" />                        
-                        <CityInput type="text" id="city" placeholder="Cidade" />                        
-                        <UfInput type="text" id="uf" placeholder="UF" />
+                        <DistrictInput {...register("district")} type="text" id="district" placeholder="Bairro" />                        
+                        <CityInput {...register("city")} type="text" id="city" placeholder="Cidade" />                        
+                        <UfInput {...register("uf")} type="text" id="uf" placeholder="UF" />
                     </GroupForm>
 
                     {loading && (
@@ -126,19 +171,19 @@ export function FormCheckout() {
                     <div>
                         <PaymentSection>
                             <PaymentOption>
-                                <input type="radio" id="credit-card" name="payment" />                                 
+                                <input {...register("payment")} type="radio" id="credit-card" value="credit-card" />                                 
                                 <label htmlFor="credit-card">
-                                 <CreditCard size={16} /> Cartão de Crédito
+                                    <CreditCard size={16} /> Cartão de Crédito
                                 </label>
                             </PaymentOption>
                             <PaymentOption>
-                                <input type="radio" id="debit-card" name="payment" />                                
+                                <input {...register("payment")} type="radio" id="debit-card" value="debit-card" />                                
                                 <label htmlFor="debit-card">
                                     <Bank size={16} /> Cartão de Débito
                                 </label>
                             </PaymentOption>
                             <PaymentOption>
-                                <input type="radio" id="money" name="payment" />
+                                <input {...register("payment")} type="radio" id="money" value="money" />
                                 <label htmlFor="money">
                                     <Money size={16} /> Dinheiro
                                 </label>
@@ -147,8 +192,8 @@ export function FormCheckout() {
                     </div>
                 </fieldset>
                 <div>
-                    <button type="submit">
-                        Salvar Dados
+                    <button type="submit" disabled={loading}>
+                        {loading ? 'Salvando...' : isDataChanged ? 'Atualizar Dados' : formCheckout.length > 0 ? 'Dados Salvos' : 'Salvar Dados'}
                     </button>
                 </div>
             </FormContainer>

@@ -4,6 +4,7 @@ import { GlobalStyle } from "./styles/global"
 import { BrowserRouter } from "react-router-dom"
 import { Router } from "./Router"
 import { CartContextProvider } from "./context/CartContext"
+import { FormCartContextProvider } from "./context/FormCartContext"
 
 export function App() {
 
@@ -11,9 +12,11 @@ export function App() {
     <ThemeProvider theme={defaultTheme}>
       <GlobalStyle />
       <CartContextProvider>
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
+        <FormCartContextProvider>
+          <BrowserRouter>
+            <Router />
+          </BrowserRouter>
+        </FormCartContextProvider>
       </CartContextProvider>
     </ThemeProvider>
   )

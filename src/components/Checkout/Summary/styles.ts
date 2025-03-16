@@ -146,5 +146,11 @@ export const SubtotalContainer = styled.div`
         &:hover {
             background: ${props => props.theme['yellow-dark']};
         }
+
+        &:disabled {
+            background: ${props => props.theme['yellow-light']};
+            color: ${props => props.theme['base-text']};
+            cursor: not-allowed;
+        }
     }
 `;

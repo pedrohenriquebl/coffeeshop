@@ -12,7 +12,13 @@ interface CartContextType {
         title: string,
         url: string, 
     }[];
-    setCart: React.Dispatch<React.SetStateAction<any>>;
+    setCart: React.Dispatch<React.SetStateAction<{ 
+        id: number, 
+        qty: number,
+        price: number,
+        title: string,
+        url: string, 
+    }[]>>;
     addToCart: (id: number, qty: number, price: number, title: string, url: string) => void;
     getCartTotal: () => number;
     getProductTotal: (id: number) => number;
@@ -102,29 +108,6 @@ export function CartContextProvider({ children }: CartContextProviderProps){
             } else {
                 return [...prevCart, { id, qty, price, title, url }];
             }
-
-            /*const updatedCart = prevCart.map(item => {
-                if (item.id === id) {
-                    const newQty = item.qty + change;
-                    if (newQty > 0) {
-                        return { ...item, qty: newQty };
-                    }
-
-                    return null;
-                }
-                return item;
-            }).filter(item => item !== null)    
-            
-            if (!updatedCart.some(item => item.id === id) && change > 0) {
-                updatedCart.push({
-                    id,
-                    qty: 1,
-                    price,
-                    title,
-                });
-            }
-
-            return updatedCart;*/
         });        
     }
 

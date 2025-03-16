@@ -10,6 +10,7 @@ import {
     ProductPrice,
     SubtotalContainer 
 } from "./styles";
+import { FormContext } from "../../../context/FormCartContext";
 
 interface CartItems {
     id: number;
@@ -21,6 +22,9 @@ interface CartItems {
 
 export function Summary() {
     const { cart, getProductTotal, increaseQty, decreaseQty, removeItemFromCart, getCartTotal } = useContext(CartContext);    
+    const { formCheckout } = useContext(FormContext);
+
+    const isAddressSaved = formCheckout && formCheckout[0]?.street && formCheckout[0]?.district && formCheckout[0]?.city && formCheckout[0]?.uf;
 
     return (
         <CheckoutSummaryContainer>
@@ -68,7 +72,10 @@ export function Summary() {
                         <span>R$ {getCartTotal().toFixed(2)}</span>
                     </li>
                 </ul>
-                <button disabled>Confimar Pedido</button>
+                <button disabled={!isAddressSaved}>Confimar Pedido</button>
+                {
+                    !isAddressSaved && <p>Por favor, preencha o endereço de entrega e o método de pagamento</p>
+                }
             </SubtotalContainer>
         </CheckoutSummaryContainer>
     );
