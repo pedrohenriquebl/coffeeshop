@@ -112,7 +112,7 @@ export const SubtotalContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2rem;
     
     ul {
         list-style: none;
