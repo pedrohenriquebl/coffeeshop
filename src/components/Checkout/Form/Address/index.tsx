@@ -76,13 +76,11 @@ export function AddressFields() {
 
     function handleCepChange (e: React.ChangeEvent<HTMLInputElement>) {
         let value = e.target.value.replace(/\D/g, "");
-        if (value.length <= 5) {
-            value = value.replace(/(\d{5})(\d{0,1})/, "$1-$2");
-        } else {
-            value = value.replace(/(\d{5})(\d{0,3})/, "$1-$2");
+        if (value.length > 5) {
+            value = value.replace(/(\d{5})(\d{1,3})/, "$1-$2");
         }
-
-        setValue("cep", value); 
+    
+        setValue("cep", value);
     }
 
     return (
